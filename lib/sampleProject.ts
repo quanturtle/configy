@@ -46,6 +46,7 @@ export const SAMPLE_PROJECT: Project = {
         path: "~/my-app",
         inputs: [
           { id: "i-base-image", label: "BASE_IMAGE" },
+          { id: "i-db-url", label: "DATABASE_URL" },
         ],
         outputs: [
           { id: "o-workdir", label: "WORKDIR", value: "/app" },
@@ -107,6 +108,13 @@ export const SAMPLE_PROJECT: Project = {
       sourceHandle: "output-o-image",
       target: "n-dockerfile",
       targetHandle: "input-i-base-image",
+    },
+    {
+      id: "e-dockerfile-db",
+      source: "n-docker",
+      sourceHandle: "output-i-db-url",
+      target: "n-dockerfile",
+      targetHandle: "input-i-db-url",
     },
     {
       id: "e-ts-outdir",
