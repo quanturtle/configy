@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { ChevronDown, Plus, Trash2, X } from "lucide-react"
 import { useConfigStore } from "@/lib/store"
@@ -164,37 +164,34 @@ function PreviewPane({ nodeId }: { nodeId: string }) {
 
 type Tab = "preview" | "edit"
 
-function EditorPanel() {
-  const selectedNodeId = useConfigStore((s) => s.selectedNodeId)
+function EditorPanel({ nodeId }: { nodeId: string }) {
   const nodes = useConfigStore((s) => s.nodes)
   const edges = useConfigStore((s) => s.edges)
   const updateNode = useConfigStore((s) => s.updateNode)
   const selectNode = useConfigStore((s) => s.selectNode)
 
-  const node = nodes.find((n) => n.id === selectedNodeId)
+  const node = nodes.find((n) => n.id === nodeId)
   const resolved = node
     ? resolveValues(nodes, edges).get(node.id) ?? EMPTY_RESOLVED
     : EMPTY_RESOLVED
 
   const [tab, setTab] = useState<Tab>("preview")
-  const [label, setLabel] = useState("")
-  const [path, setPath] = useState("")
-  const [inputs, setInputs] = useState<HandleDef[]>([])
-  const [outputs, setOutputs] = useState<HandleDef[]>([])
-
-  useEffect(() => {
-    if (node) {
-      setLabel(node.data.label)
-      setPath(node.data.path ?? "")
-      setInputs(node.data.inputs)
-      setOutputs(node.data.outputs)
-    }
-  }, [node?.id])
+  const [label, setLabel] = useState(() => node?.data.label ?? "")
+  const [path, setPath] = useState(() => node?.data.path ?? "")
+  const [typeName, setTypeName] = useState(() => node?.data.typeName ?? "")
+  const [inputs, setInputs] = useState<HandleDef[]>(() => node?.data.inputs ?? [])
+  const [outputs, setOutputs] = useState<HandleDef[]>(() => node?.data.outputs ?? [])
 
   if (!node) return null
 
   const save = () => {
-    updateNode(node.id, { label, path: path.trim() || undefined, inputs, outputs })
+    updateNode(node.id, {
+      label,
+      path: path.trim() || undefined,
+      typeName: typeName.trim() || undefined,
+      inputs,
+      outputs,
+    })
     setTab("preview")
   }
 
@@ -283,6 +280,23 @@ function EditorPanel() {
               />
             </div>
 
+            {/* type */}
+            <div className="flex flex-col gap-1.5">
+              <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Type
+              </label>
+              <input
+                value={typeName}
+                onChange={(e) => setTypeName(e.target.value)}
+                placeholder="(derived from filename)"
+                className={cn(
+                  "rounded-md border border-border bg-muted/40 px-2.5 py-1.5",
+                  "font-mono text-[12px] text-foreground placeholder:text-muted-foreground/50",
+                  "outline-none focus:border-ring focus:ring-1 focus:ring-ring/50"
+                )}
+              />
+            </div>
+
             <HandleList
               label="Inputs"
               handles={inputs}
@@ -332,7 +346,7 @@ export function NodeEditor() {
 
   return (
     <AnimatePresence>
-      {selectedNodeId && <EditorPanel />}
+      {selectedNodeId && <EditorPanel key={selectedNodeId} nodeId={selectedNodeId} />}
     </AnimatePresence>
   )
 }

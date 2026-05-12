@@ -17,6 +17,8 @@ export type ConfigNodeData = {
   label: string
   // directory the file lives in; when unset the location is derived from the label
   path?: string
+  // badge shown on the node; when unset it is derived from the filename extension
+  typeName?: string
   inputs: HandleDef[]
   outputs: HandleDef[]
 }

@@ -22,7 +22,8 @@ function handleTop(index: number): number {
   return HEADER_H + BODY_PAD + index * ROW_H + ROW_H / 2
 }
 
-function nodeType(label: string): string {
+function nodeType(label: string, explicitType?: string): string {
+  if (explicitType && explicitType.trim()) return explicitType.trim()
   const name = label.replace(/^.*\//, "")
   const dot = name.lastIndexOf(".")
   if (dot > 0) return name.slice(dot + 1).toLowerCase()
@@ -178,7 +179,7 @@ function ConfigNodeBase({ id, data }: NodeProps) {
 
         {/* type next to the icon */}
         <span className="shrink-0 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
-          {nodeType(nodeData.label || "untitled")}
+          {nodeType(nodeData.label || "untitled", nodeData.typeName)}
         </span>
 
         {/* icon placeholder — will become a logo */}
