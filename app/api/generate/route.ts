@@ -18,8 +18,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   for (const node of nodes) {
     const content = generateFileContent(node.data, values.get(node.id) ?? { inputs: {}, outputs: {} })
-    // sanitize: strip ~/ prefix, replace remaining slashes with underscores
-    const safeName = node.data.label.replace(/^~\//, "").replace(/\//g, "_")
+    // combine explicit location (if any) with the filename, then sanitize:
+    // strip ~/ prefix, replace remaining slashes with underscores so the file stays flat
+    const located = node.data.path ? `${node.data.path.replace(/\/+$/, "")}/${node.data.label}` : node.data.label
+    const safeName = located.replace(/^~\//, "").replace(/^\/+/, "").replace(/\//g, "_")
     const filePath = join(outputDir, safeName)
 
     try {

@@ -34,7 +34,10 @@ function projectSlug(title: string): string {
   return title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")
 }
 
-function fileLocation(label: string, projectTitle: string): string {
+function fileLocation(label: string, projectTitle: string, explicitPath?: string): string {
+  // an explicit location set in the editor wins
+  if (explicitPath && explicitPath.trim()) return explicitPath.trim()
+
   // an explicit path in the filename wins — don't override what the user set
   const slash = label.lastIndexOf("/")
   if (slash !== -1) return label.slice(0, slash) || "/"
@@ -169,7 +172,7 @@ function ConfigNodeBase({ id, data }: NodeProps) {
             </span>
           )}
           <span className="whitespace-nowrap font-mono text-[9px] tracking-[0.08em] text-muted-foreground">
-            {fileLocation(nodeData.label || "untitled", projectTitle)}
+            {fileLocation(nodeData.label || "untitled", projectTitle, nodeData.path)}
           </span>
         </div>
 
@@ -214,7 +217,7 @@ function ConfigNodeBase({ id, data }: NodeProps) {
                     </span>
                   )}
                   {input.passthrough && (
-                    <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-primary">
+                    <span className="font-mono text-[13px] leading-none text-primary">
                       ↦
                     </span>
                   )}
@@ -240,7 +243,7 @@ function ConfigNodeBase({ id, data }: NodeProps) {
               >
                 <span className="flex items-baseline gap-1.5 whitespace-nowrap">
                   {passthrough && (
-                    <span className="font-mono text-[8px] uppercase tracking-[0.1em] text-primary">
+                    <span className="font-mono text-[13px] leading-none text-primary">
                       ↦
                     </span>
                   )}

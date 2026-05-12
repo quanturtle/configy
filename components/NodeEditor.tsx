@@ -96,26 +96,30 @@ function HandleList({
                   overridden && "placeholder:text-foreground/60"
                 )}
               />
-              {showPassthrough && (
+              <div className="flex w-[48px] shrink-0 items-center justify-end gap-1.5">
+                {showPassthrough ? (
+                  <button
+                    onClick={() => patch(h.id, { passthrough: !h.passthrough })}
+                    title="passthrough — also expose this input as an output"
+                    className={cn(
+                      "rounded-md border px-1.5 py-1 font-mono text-[14px] leading-none transition-colors",
+                      h.passthrough
+                        ? "border-primary/50 bg-primary/15 text-foreground"
+                        : "border-border text-muted-foreground/50 hover:text-foreground"
+                    )}
+                  >
+                    ↦
+                  </button>
+                ) : (
+                  <span className="w-[23px]" aria-hidden />
+                )}
                 <button
-                  onClick={() => patch(h.id, { passthrough: !h.passthrough })}
-                  title="passthrough — also expose this input as an output"
-                  className={cn(
-                    "shrink-0 rounded-md border px-1.5 py-1 font-mono text-[11px] leading-none transition-colors",
-                    h.passthrough
-                      ? "border-primary/50 bg-primary/15 text-foreground"
-                      : "border-border text-muted-foreground/50 hover:text-foreground"
-                  )}
+                  onClick={() => remove(h.id)}
+                  className="text-muted-foreground hover:text-destructive transition-colors"
                 >
-                  ↦
+                  <Trash2 size={11} />
                 </button>
-              )}
-              <button
-                onClick={() => remove(h.id)}
-                className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
-              >
-                <Trash2 size={11} />
-              </button>
+              </div>
             </div>
           )
         })}
@@ -174,12 +178,14 @@ function EditorPanel() {
 
   const [tab, setTab] = useState<Tab>("preview")
   const [label, setLabel] = useState("")
+  const [path, setPath] = useState("")
   const [inputs, setInputs] = useState<HandleDef[]>([])
   const [outputs, setOutputs] = useState<HandleDef[]>([])
 
   useEffect(() => {
     if (node) {
       setLabel(node.data.label)
+      setPath(node.data.path ?? "")
       setInputs(node.data.inputs)
       setOutputs(node.data.outputs)
     }
@@ -188,7 +194,7 @@ function EditorPanel() {
   if (!node) return null
 
   const save = () => {
-    updateNode(node.id, { label, inputs, outputs })
+    updateNode(node.id, { label, path: path.trim() || undefined, inputs, outputs })
     setTab("preview")
   }
 
@@ -252,6 +258,23 @@ function EditorPanel() {
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder=".env"
+                className={cn(
+                  "rounded-md border border-border bg-muted/40 px-2.5 py-1.5",
+                  "font-mono text-[12px] text-foreground placeholder:text-muted-foreground/50",
+                  "outline-none focus:border-ring focus:ring-1 focus:ring-ring/50"
+                )}
+              />
+            </div>
+
+            {/* location */}
+            <div className="flex flex-col gap-1.5">
+              <label className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                Location
+              </label>
+              <input
+                value={path}
+                onChange={(e) => setPath(e.target.value)}
+                placeholder="~/ (derived from filename)"
                 className={cn(
                   "rounded-md border border-border bg-muted/40 px-2.5 py-1.5",
                   "font-mono text-[12px] text-foreground placeholder:text-muted-foreground/50",

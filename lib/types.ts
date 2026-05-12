@@ -15,6 +15,8 @@ export type HandleDef = {
 
 export type ConfigNodeData = {
   label: string
+  // directory the file lives in; when unset the location is derived from the label
+  path?: string
   inputs: HandleDef[]
   outputs: HandleDef[]
 }
