@@ -6,6 +6,8 @@ file (`.env`, `docker-compose.yml`, `tsconfig.json`, …) that exposes typed
 dependencies; values propagate along the edges. Hit **Generate** to scaffold the
 actual files into `generated/`.
 
+![Configy — the sample project on the canvas](docs/screenshot.png)
+
 ## Features
 
 - **Node graph** — drag config nodes onto a React Flow canvas, connect them, edit
