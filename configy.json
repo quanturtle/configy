@@ -1,0 +1,222 @@
+{
+  "title": "Sample Project",
+  "nodes": [
+    {
+      "id": "n-env",
+      "type": "configNode",
+      "position": {
+        "x": 60,
+        "y": 60
+      },
+      "data": {
+        "label": ".env",
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "o-db-url",
+            "label": "DATABASE_URL"
+          },
+          {
+            "id": "o-port",
+            "label": "PORT",
+            "value": "22"
+          },
+          {
+            "id": "o-node-env",
+            "label": "NODE_ENV"
+          },
+          {
+            "id": "o-api-key",
+            "label": "API_KEY"
+          },
+          {
+            "id": "o-secret",
+            "label": "SECRET_KEY"
+          }
+        ]
+      },
+      "measured": {
+        "width": 240,
+        "height": 254
+      },
+      "selected": false
+    },
+    {
+      "id": "n-yaml",
+      "type": "configNode",
+      "position": {
+        "x": 70.35849056603772,
+        "y": 358.1320754716981
+      },
+      "data": {
+        "label": "config.yaml",
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "o-timeout",
+            "label": "timeout",
+            "value": "22"
+          },
+          {
+            "id": "o-retries",
+            "label": "retries",
+            "value": "14"
+          },
+          {
+            "id": "o-log-level",
+            "label": "log_level"
+          },
+          {
+            "id": "o-max-conn",
+            "label": "max_connections"
+          }
+        ]
+      },
+      "measured": {
+        "width": 240,
+        "height": 216
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n-docker",
+      "type": "configNode",
+      "position": {
+        "x": 440,
+        "y": 60
+      },
+      "data": {
+        "label": "docker-compose.yml",
+        "inputs": [
+          {
+            "id": "i-db-url",
+            "label": "DATABASE_URL",
+            "passthrough": true
+          },
+          {
+            "id": "i-port",
+            "label": "PORT"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "o-image",
+            "label": "image"
+          },
+          {
+            "id": "o-container",
+            "label": "container_name"
+          },
+          {
+            "id": "o-network",
+            "label": "network"
+          }
+        ]
+      },
+      "measured": {
+        "width": 244,
+        "height": 216
+      },
+      "selected": false
+    },
+    {
+      "id": "n-ts",
+      "type": "configNode",
+      "position": {
+        "x": 79.36320754716988,
+        "y": 638.461320754717
+      },
+      "data": {
+        "label": "tsconfig.json",
+        "inputs": [],
+        "outputs": [
+          {
+            "id": "o-target",
+            "label": "target"
+          },
+          {
+            "id": "o-strict",
+            "label": "strict",
+            "value": "3"
+          },
+          {
+            "id": "o-outdir",
+            "label": "outDir"
+          }
+        ]
+      },
+      "measured": {
+        "width": 240,
+        "height": 178
+      },
+      "selected": false,
+      "dragging": false
+    },
+    {
+      "id": "n-ssh",
+      "type": "configNode",
+      "position": {
+        "x": 446.98651121395517,
+        "y": 384.5290290138839
+      },
+      "data": {
+        "label": "~/.ssh/config",
+        "inputs": [
+          {
+            "id": "wwa0nty",
+            "label": "E",
+            "passthrough": true
+          }
+        ],
+        "outputs": [
+          {
+            "id": "o-host",
+            "label": "Host"
+          },
+          {
+            "id": "o-hostname",
+            "label": "HostName"
+          },
+          {
+            "id": "o-user",
+            "label": "User"
+          },
+          {
+            "id": "o-identity",
+            "label": "IdentityFile"
+          }
+        ]
+      },
+      "measured": {
+        "width": 240,
+        "height": 254
+      },
+      "selected": true,
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-db",
+      "source": "n-env",
+      "sourceHandle": "output-o-db-url",
+      "target": "n-docker",
+      "targetHandle": "input-i-db-url"
+    },
+    {
+      "id": "e-port",
+      "source": "n-env",
+      "sourceHandle": "output-o-port",
+      "target": "n-docker",
+      "targetHandle": "input-i-port"
+    },
+    {
+      "source": "n-ts",
+      "sourceHandle": "output-o-strict",
+      "target": "n-ssh",
+      "targetHandle": "input-wwa0nty",
+      "id": "xy-edge__n-tsoutput-o-strict-n-sshinput-wwa0nty"
+    }
+  ]
+}
