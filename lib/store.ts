@@ -17,6 +17,7 @@ import {
   type GenerateResult,
   type Project,
 } from "./types"
+import { SAMPLE_PROJECT } from "./sampleProject"
 
 function randomId(): string {
   return Math.random().toString(36).slice(2, 9)
@@ -42,6 +43,7 @@ type ConfigStore = {
   isGenerating: boolean
   generateResults: GenerateResult[] | null
   loadGraph: () => Promise<void>
+  loadSample: () => void
   saveGraph: () => Promise<void>
   setTitle: (title: string) => void
   exportProject: () => void
@@ -73,6 +75,16 @@ export const useConfigStore = create<ConfigStore>((set, get) => ({
       nodes: data.nodes ?? [],
       edges: data.edges ?? [],
     })
+  },
+
+  loadSample: () => {
+    set({
+      title: SAMPLE_PROJECT.title,
+      nodes: SAMPLE_PROJECT.nodes.map((n) => ({ ...n, data: { ...n.data } })),
+      edges: SAMPLE_PROJECT.edges.map((e) => ({ ...e })),
+      selectedNodeId: null,
+    })
+    get().saveGraph()
   },
 
   saveGraph: async () => {

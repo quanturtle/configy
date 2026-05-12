@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useCallback, useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -21,6 +21,7 @@ import {
   Unlock,
   Download,
   Upload,
+  Sparkles,
 } from "lucide-react"
 import { ConfigNode } from "@/components/ConfigNode"
 import { NodeEditor } from "@/components/NodeEditor"
@@ -73,7 +74,7 @@ function Canvas() {
   const onEdgesChange = useConfigStore((s) => s.onEdgesChange)
   const onConnect = useConfigStore((s) => s.onConnect)
   const selectNode = useConfigStore((s) => s.selectNode)
-  const loadGraph = useConfigStore((s) => s.loadGraph)
+  const loadSample = useConfigStore((s) => s.loadSample)
   const generate = useConfigStore((s) => s.generate)
   const isGenerating = useConfigStore((s) => s.isGenerating)
   const selectedNodeId = useConfigStore((s) => s.selectedNodeId)
@@ -96,10 +97,6 @@ function Canvas() {
     },
     [importProject]
   )
-
-  useEffect(() => {
-    loadGraph()
-  }, [loadGraph])
 
   const onPaneClick = useCallback(() => {
     selectNode(null)
@@ -153,6 +150,18 @@ function Canvas() {
             onChange={onImportFile}
             className="hidden"
           />
+          <button
+            onClick={loadSample}
+            title="Load the sample project"
+            className={cn(
+              "flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5",
+              "font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground",
+              "transition-colors hover:border-foreground/30 hover:text-foreground"
+            )}
+          >
+            <Sparkles size={11} />
+            Sample
+          </button>
           <button
             onClick={() => importInputRef.current?.click()}
             title="Import project"
