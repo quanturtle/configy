@@ -196,13 +196,7 @@ function EditorPanel({ nodeId }: { nodeId: string }) {
   }
 
   return (
-    <motion.aside
-      initial={{ x: 448 }}
-      animate={{ x: 0 }}
-      exit={{ x: 448 }}
-      transition={{ ease: [0.2, 0.7, 0.2, 1], duration: 0.3 }}
-      className="flex w-[28rem] shrink-0 flex-col border-l border-border bg-card"
-    >
+    <>
       {/* header */}
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4">
         <span className="font-mono text-[11px] tracking-[0.12em] text-foreground truncate">
@@ -231,10 +225,7 @@ function EditorPanel({ nodeId }: { nodeId: string }) {
           >
             {t}
             {tab === t && (
-              <motion.div
-                layoutId="tab-indicator"
-                className="absolute inset-x-0 bottom-0 h-px bg-foreground"
-              />
+              <div className="absolute inset-x-0 bottom-0 h-px bg-foreground" />
             )}
           </button>
         ))}
@@ -337,6 +328,21 @@ function EditorPanel({ nodeId }: { nodeId: string }) {
           </div>
         </>
       )}
+    </>
+  )
+}
+
+function EditorShell({ nodeId }: { nodeId: string }) {
+  return (
+    <motion.aside
+      initial={{ x: 448 }}
+      animate={{ x: 0 }}
+      exit={{ x: 448 }}
+      transition={{ ease: [0.2, 0.7, 0.2, 1], duration: 0.3 }}
+      className="flex w-[28rem] shrink-0 flex-col overflow-hidden border-l border-border bg-card"
+    >
+      {/* keyed so switching nodes swaps the panel contents without re-running the slide animation */}
+      <EditorPanel key={nodeId} nodeId={nodeId} />
     </motion.aside>
   )
 }
@@ -346,7 +352,7 @@ export function NodeEditor() {
 
   return (
     <AnimatePresence>
-      {selectedNodeId && <EditorPanel key={selectedNodeId} nodeId={selectedNodeId} />}
+      {selectedNodeId && <EditorShell nodeId={selectedNodeId} />}
     </AnimatePresence>
   )
 }
